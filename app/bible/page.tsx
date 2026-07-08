@@ -178,7 +178,7 @@ export default function UltimateBibleGateway() {
         <div className="max-w-7xl mx-auto flex justify-between items-center text-xs font-bold tracking-widest uppercase">
           <div className="flex items-center gap-2">
             <BookOpen size={14} className="text-blue-400" />
-            <span>All Saints' Church — Scripture Gateway</span>
+            <span>All Saints' Church — Scripture</span>
           </div>
           <Link href="/" className="hover:text-blue-300 transition-colors">← Back to Main Website</Link>
         </div>
