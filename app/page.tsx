@@ -1,33 +1,12 @@
-'use client'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import DailyDevotion from '@/components/DailyDevotion'
+import { BookOpen } from 'lucide-react'
 
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-white overflow-x-hidden">
-      <script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "PlaceOfWorship",
-      "name": "All Saints' Church Lelystad",
-      "description": "An English-speaking Anglican church serving the multicultural community of Lelystad.",
-      "url": "https://your-domain.nl",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Lelystad",
-        "addressRegion": "Flevoland",
-        "addressCountry": "NL"
-      },
-      "parentOrganization": {
-        "@type": "Organization",
-        "name": "Nigerian Anglican Chaplaincy Europe"
-      }
-    })
-  }}
-/>
-      {/* Cinematic Hero */}
+      
+      {/* Cinematic Hero Section */}
       <section className="relative h-[95vh] flex items-center justify-center overflow-hidden">
         {/* Background Video Overlay */}
         <div className="absolute inset-0 z-0">
@@ -45,53 +24,34 @@ export default function Home() {
 
         {/* Hero Content */}
         <div className="relative z-20 text-center px-6">
-          <motion.div 
-             initial={{ opacity: 0, y: 30 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 1, ease: "easeOut" }}
-          >
-            <h1 className="text-6xl md:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
-              WELCOME HOME.
-            </h1>
-            <h2 className="text-2xl md:text-4xl text-white/90 mb-10 font-light tracking-tight italic">
-              All Saints' Church, Lelystad
-            </h2>
-            
-            <div className="flex flex-col md:flex-row gap-5 justify-center items-center">
-              <Link href="/join" className="group bg-white text-blue-900 px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-50 transition-all shadow-2xl flex items-center gap-3">
-                Plan Your Visit 
-                <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
-              </Link>
-              <Link href="/sermons" className="bg-transparent backdrop-blur-md text-white border-2 border-white/40 px-10 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-blue-900 transition-all shadow-2xl">
-                Watch Sermons
-              </Link>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 opacity-60">
-          <div className="w-[30px] h-[50px] border-2 border-white/30 rounded-full flex justify-center p-2">
-            <motion.div 
-              animate={{ y: [0, 15, 0] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="w-1.5 h-1.5 bg-white rounded-full" 
-            />
+          <h1 className="text-6xl md:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
+            WELCOME HOME.
+          </h1>
+          <h2 className="text-2xl md:text-4xl text-white/90 mb-10 font-light tracking-tight italic">
+            All Saints' Church, Lelystad
+          </h2>
+          
+          <div className="flex flex-col md:flex-row gap-5 justify-center items-center">
+            <Link href="/join" className="group bg-white text-blue-900 px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-50 transition-all shadow-2xl flex items-center gap-3">
+              Plan Your Visit 
+              <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
+            </Link>
+            <Link href="/sermons" className="bg-transparent backdrop-blur-md text-white border-2 border-white/40 px-10 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-blue-900 transition-all shadow-2xl">
+              Watch Sermons
+            </Link>
+            {/* Added: Clear Action Bible Route Link Button */}
+            <Link href="/bible" className="bg-white/10 backdrop-blur-md text-white border-2 border-white/20 px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-blue-900 transition-all shadow-2xl flex items-center gap-2">
+              <BookOpen size={20} />
+              Read Bible
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Discovery Section (The "Stories" hook) */}
+      {/* Discovery Section */}
       <section className="py-24 px-6 max-w-7xl mx-auto bg-white">
         <div className="grid md:grid-cols-2 gap-20 items-center">
-          
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="order-2 md:order-1"
-          >
+          <div>
             <span className="text-blue-700 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Our Heart</span>
             <h2 className="text-4xl md:text-6xl font-bold text-blue-950 mb-8 tracking-tighter leading-tight">
               A place to belong, <br />a place to become.
@@ -103,24 +63,28 @@ export default function Home() {
               DISCOVER OUR STORY 
               <span className="text-2xl group-hover:translate-x-2 transition-transform">→</span>
             </Link>
-          </motion.div>
+          </div>
           
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="order-1 md:order-2 relative"
-          >
-             {/* The Stylized Image Rotation */}
-             <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl transform md:rotate-3 hover:rotate-0 transition-transform duration-700 ease-in-out border-8 border-white">
+          <div className="relative">
+             <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
                 <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80" className="w-full h-[500px] object-cover" alt="Community Gathering" />
              </div>
-             {/* Background decorative frame */}
              <div className="absolute -bottom-8 -left-8 w-64 h-64 bg-blue-50 rounded-full z-0 opacity-50" />
-          </motion.div>
-          
+          </div>
         </div>
       </section>
+
+      {/* Automated Daily Devotion Section */}
+      <section className="py-24 px-6 max-w-7xl mx-auto bg-white border-t border-gray-100">
+        <div className="mb-12 text-center md:text-left">
+          <span className="text-blue-700 font-bold tracking-[0.3em] uppercase text-xs mb-3 block">Daily Bread</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-blue-950 tracking-tighter">Start Your Day in the Word</h2>
+        </div>
+        
+        {/* Renders the interactive client-side preview widget */}
+        <DailyDevotion />
+      </section>
+
     </main>
   )
 }
