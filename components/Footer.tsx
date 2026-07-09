@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { Mail, MapPin, Phone, Globe } from 'lucide-react' // Swapped Facebook for Globe
+import { Mail, MapPin, Phone, Globe, BookOpen } from 'lucide-react' // Added BookOpen for the Bible link icon
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -21,7 +21,6 @@ export default function Footer() {
             </span>
           </p>
           <div className="flex gap-4">
-            {/* Using Globe as a temporary placeholder to fix the build */}
             <a href="https://facebook.com" className="hover:text-blue-400 transition">
               <Globe size={20} />
             </a>
@@ -35,10 +34,17 @@ export default function Footer() {
         <div>
           <h3 className="font-bold mb-6 text-blue-300 uppercase tracking-widest text-xs">Quick Links</h3>
           <ul className="space-y-4 text-sm text-blue-100/80">
+            {/* Added: Home and Bible navigation links */}
+            <li><Link href="/" className="hover:text-white transition">Home</Link></li>
+            <li>
+              <Link href="/bible" className="hover:text-white transition flex items-center gap-1.5 text-blue-200">
+                <BookOpen size={14} /> Bible Gateway
+              </Link>
+            </li>
             <li><Link href="/story" className="hover:text-white transition">Our Story</Link></li>
             <li><Link href="/sermons" className="hover:text-white transition">Sermons</Link></li>
             <li><Link href="/join" className="hover:text-white transition">Connect</Link></li>
-            <li><Link href="/give" className="hover:text-white transition">Give</Link></li>
+            <li><Link href="/give" className="hover:text-white transition">Donate</Link></li>
           </ul>
         </div>
 

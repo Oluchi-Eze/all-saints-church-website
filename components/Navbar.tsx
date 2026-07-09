@@ -30,9 +30,20 @@ export default function Navbar() {
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${navbarBackground}`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         
-        {/* Brand */}
-        <Link href="/" className="text-2xl font-bold tracking-tighter text-white">
-          ALL SAINTS<span className="font-light opacity-80 ml-1 italic">CHURCH</span>
+        {/* Brand Logo Identity */}
+        <Link href="/" className="flex items-center gap-3 group">
+          {/* Logo Asset Image */}
+          <img 
+  src="/logo.png" 
+  alt="All Saints' Church Logo" 
+  className="h-10 w-auto object-contain group-hover:scale-105 transition-transform"
+  onError={(e) => {
+    e.currentTarget.style.display = 'none'
+  }}
+/>
+          <span className="text-2xl font-bold tracking-tighter text-white">
+            ALL SAINTS<span className="font-light opacity-80 ml-1 italic">CHURCH</span>
+          </span>
         </Link>
 
         {/* Desktop Links */}
@@ -45,7 +56,6 @@ export default function Navbar() {
             Our Story
             {pathname === '/story' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
           </Link>
-          {/* Added: Bible Gateway Link inside default tab navigation layouts */}
           <Link href="/bible" className="hover:text-blue-300 transition relative py-1 flex items-center gap-1.5 normal-case tracking-wider font-bold">
             <BookOpen size={14} className="opacity-90" />
             Bible
@@ -56,7 +66,7 @@ export default function Navbar() {
             {pathname === '/sermons' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
           </Link>
           <Link href="/give" className="hover:text-blue-300 transition relative py-1">
-            Give
+            Donate
             {pathname === '/give' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
           </Link>
           <Link 

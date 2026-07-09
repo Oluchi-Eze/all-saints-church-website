@@ -45,18 +45,45 @@ const ALL_VERSIONS = [
   { id: 'LXX', name: 'Septuagint (LXX) - Greek OT', source: 'bolls', bollsId: 61 }
 ]
 
+const BOLLS_SHORT_CODES: { [key: string]: string } = {
+  "Genesis": "Gen", "Exodus": "Exo", "Leviticus": "Lev", "Numbers": "Num", "Deuteronomy": "Deu",
+  "Joshua": "Jos", "Judges": "Jdg", "Ruth": "Rut", "1 Samuel": "1Sa", "2 Samuel": "2Sa",
+  "1 Kings": "1Ki", "2 Kings": "2Ki", "1 Chronicles": "1Ch", "2 Chronicles": "2Ch", "Ezra": "Ezr",
+  "Nehemiah": "Neh", "Esther": "Est", "Job": "Job", "Psalms": "Psa", "Proverbs": "Pro",
+  "Ecclesiastes": "Ecc", "Song of Solomon": "Sng", "Isaiah": "Isa", "Jeremiah": "Jer", "Lamentations": "Lam",
+  "Ezekiel": "Ezk", "Daniel": "Dan", "Hosea": "Hos", "Joel": "Jol", "Amos": "Amo",
+  "Obadiah": "Oba", "Jonah": "Jon", "Micah": "Mic", "Nahum": "Nam", "Habakkuk": "Hab",
+  "Zephaniah": "Zep", "Haggai": "Hag", "Zechariah": "Zec", "Malachi": "Mal", "Matthew": "Mat",
+  "Mark": "Mrk", "Luke": "Luk", "John": "Jhn", "Acts": "Act", "Romans": "Rom",
+  "1 Corinthians": "1Co", "2 Corinthians": "2Co", "Galatians": "Gal", "Ephesians": "Eph", "Philippians": "Php",
+  "Colossians": "Col", "1 Thessalonians": "1Th", "2 Thessalonians": "2Th", "1 Timothy": "1Ti", "2 Timothy": "2Ti",
+  "Titus": "Tit", "Philemon": "Phm", "Hebrews": "Heb", "James": "Jas", "1 John": "1Jn",
+  "2 John": "2Jn", "3 John": "3Jn", "Jude": "Jud", "Revelation": "Rev"
+}
+
 export default function UltimateBibleGateway() {
   const [book, setBook] = useState('John')
   const [chapter, setChapter] = useState(3)
   const [verseSelection, setVerseSelection] = useState('all')
-  const [versionObj, setVersionObj] = useState(ALL_VERSIONS[0]) 
+  const [versionObj, setVersionObj] = useState(ALL_VERSIONS[2]) // Default to NIV
   const [verses, setVerses] = useState<{ text: string; verse: number }[]>([])
   const [totalVersesInChapter, setTotalVersesInChapter] = useState(36)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('John 3')
   
   const isInitialMount = useRef(true)
+
+  const isSingleChapterBook = (bookName: string) => {
+    return ["Jude", "Obadiah", "Philemon", "2 John", "3 John"].includes(bookName)
+  }
+
+  useEffect(() => {
+    const formattedReference = verseSelection === 'all' 
+      ? `${book} ${chapter}` 
+      : `${book} ${chapter}:${verseSelection}`
+    setSearchQuery(formattedReference)
+  }, [book, chapter, verseSelection])
 
   const parseAndSetReference = (rawQuery: string) => {
     if (!rawQuery.trim()) return
@@ -94,42 +121,64 @@ export default function UltimateBibleGateway() {
     setLoading(true)
     setError('')
     try {
+      let targetUrl = ''
+      
       if (currentVer.source === 'bolls') {
-        const bookId = ALL_BOOKS_IN_ORDER.findIndex(b => b.toLowerCase() === targetBook.toLowerCase()) + 1
-        if (bookId <= 0) throw new Error('Invalid book.')
-
-        const res = await fetch(`https://bolls.life/get-chapter/${currentVer.bollsId}/${bookId}/${targetChapter}/`)
-        if (!res.ok) throw new Error('Bolls node down.')
+        const shortCode = BOLLS_SHORT_CODES[targetBook] || targetBook.substring(0, 3)
+        const useNumericEndpoint = ['VULG', 'LXX', 'CUV', 'NBG', 'LUT'].includes(currentVer.id)
         
-        const data = await res.json()
-        if (!Array.isArray(data) || data.length === 0) throw new Error('Empty chapter.')
-
-        const fetchedVerses = data.map((v: any) => ({ verse: v.verse, text: v.text }))
-        setVerses(fetchedVerses)
-        setTotalVersesInChapter(fetchedVerses.length)
+        if (useNumericEndpoint) {
+          const bookIndexId = ALL_BOOKS_IN_ORDER.findIndex(b => b.toLowerCase() === targetBook.toLowerCase()) + 1
+          targetUrl = `https://bolls.life/get-chapter/${currentVer.bollsId}/${bookIndexId}/${targetChapter}/`
+        } else {
+          targetUrl = `https://bolls.life/get-text/${currentVer.id}/${shortCode}/${targetChapter}/`
+        }
       } else {
-        const res = await fetch(`https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=${currentVer.id.toLowerCase()}`)
-        if (!res.ok) throw new Error('Bible-API down.')
-        
-        const data = await res.json()
-        const fetchedVerses = data.verses?.map((v: any) => ({ verse: v.verse, text: v.text })) || []
-        setVerses(fetchedVerses)
-        setTotalVersesInChapter(fetchedVerses.length)
+        targetUrl = `https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=${currentVer.id.toLowerCase()}`
       }
+
+      const res = await fetch(`/api/bible?url=${encodeURIComponent(targetUrl)}`)
+      if (!res.ok) throw new Error('Proxy communication connection dropped.')
+      
+      const data = await res.json()
+
+      if (!Array.isArray(data) && !data.verses) {
+        throw new Error('Malformed JSON schema block payload response.')
+      }
+
+      const fetchedVerses = Array.isArray(data)
+        ? data.map((v: any) => ({ verse: v.verse, text: v.text }))
+        : data.verses?.map((v: any) => ({ verse: v.verse, text: v.text })) || []
+
+      if (fetchedVerses.length === 0 && currentVer.source === 'bolls') {
+        const bookIndexId = ALL_BOOKS_IN_ORDER.findIndex(b => b.toLowerCase() === targetBook.toLowerCase()) + 1
+        const retryUrl = `https://bolls.life/get-chapter/${currentVer.bollsId}/${bookIndexId}/${targetChapter}/`
+        const retryRes = await fetch(`/api/bible?url=${encodeURIComponent(retryUrl)}`)
+        const retryData = await retryRes.json()
+        const parsedRetryVerses = Array.isArray(retryData) ? retryData : []
+        
+        if (parsedRetryVerses.length > 0) {
+          setVerses(parsedRetryVerses.map((v: any) => ({ verse: v.verse, text: v.text })))
+          setTotalVersesInChapter(parsedRetryVerses.length)
+          setLoading(false)
+          return
+        }
+      }
+
+      setVerses(fetchedVerses)
+      setTotalVersesInChapter(fetchedVerses.length)
     } catch (err) {
-      // Quietly process alternate fallback resources without alerting the user view
       try {
-        const fallbackRes = await fetch(`https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=kjv`)
+        const fallbackUrl = `https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=kjv`
+        const fallbackRes = await fetch(`/api/bible?url=${encodeURIComponent(fallbackUrl)}`)
         const fallbackData = await fallbackRes.json()
         const fallbackVerses = fallbackData.verses?.map((v: any) => ({ verse: v.verse, text: v.text })) || []
         
         setVerses(fallbackVerses)
         setTotalVersesInChapter(fallbackVerses.length)
-        
-        // CRITICAL: Keep error blank so no technical notice renders on screen
         setError('')
       } catch {
-        setError('Could not connect to scripture databases. Please verify your connection.')
+        setError('Could not securely align structure payload maps. Review internal local server tracking nodes.')
       }
     } finally {
       setLoading(false)
@@ -160,7 +209,6 @@ export default function UltimateBibleGateway() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     parseAndSetReference(searchQuery)
-    setSearchQuery('')
   }
 
   const changeChapter = (direction: 'next' | 'prev') => {
@@ -192,7 +240,7 @@ export default function UltimateBibleGateway() {
               <div className="relative">
                 <input 
                   type="text"
-                  placeholder="e.g., Romans 8:28, John 3:16"
+                  placeholder="e.g., Romans 8, Judges 4, John 3"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-white/10 border border-white/20 rounded-2xl py-3 pl-5 pr-12 text-white font-medium placeholder-white/40 focus:outline-none focus:border-white focus:bg-white/15 transition-all text-sm"
@@ -204,7 +252,7 @@ export default function UltimateBibleGateway() {
             </form>
 
             <div className="w-full">
-              <label className="block text-xs uppercase font-black tracking-widest text-blue-300 mb-2">Verse Filter</label>
+              <label className="block text-xs uppercase font-black tracking-widest text-blue-300 mb-2">Verses</label>
               <div className="flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-3 rounded-2xl text-white">
                 <Hash size={16} className="text-blue-300" />
                 <select
@@ -221,7 +269,7 @@ export default function UltimateBibleGateway() {
             </div>
 
             <div className="w-full">
-              <label className="block text-xs uppercase font-black tracking-widest text-blue-300 mb-2">Version Library</label>
+              <label className="block text-xs uppercase font-black tracking-widest text-blue-300 mb-2">Bible Versions</label>
               <div className="flex items-center gap-2 bg-white/10 border border-white/20 px-4 py-3 rounded-2xl text-white">
                 <Globe size={16} className="text-blue-300" />
                 <select
@@ -230,7 +278,6 @@ export default function UltimateBibleGateway() {
                     const match = ALL_VERSIONS.find(v => v.id === e.target.value)
                     if (match) {
                       setVersionObj(match)
-                      setVerseSelection('all')
                     }
                   }}
                   className="bg-transparent font-semibold outline-none w-full cursor-pointer text-white [&>option]:text-gray-900 text-sm"
@@ -338,8 +385,19 @@ export default function UltimateBibleGateway() {
             <div className="border-t border-gray-100 mt-12 pt-6 flex justify-between items-center text-sm text-gray-400">
               <span className="flex items-center gap-1.5"><HelpCircle size={14}/> Compare phrasing layouts instantly by switching translations.</span>
               <div className="flex gap-4">
-                <button onClick={() => changeChapter('prev')} disabled={chapter <= 1} className="hover:text-blue-900 font-bold disabled:opacity-30 transition-colors cursor-pointer">← Previous</button>
-                <button onClick={() => changeChapter('next')} className="hover:text-blue-900 font-bold transition-colors cursor-pointer">Next →</button>
+                <button 
+                  onClick={() => changeChapter('prev')} 
+                  disabled={chapter <= 1} 
+                  className="hover:text-blue-900 font-bold disabled:opacity-30 transition-colors cursor-pointer"
+                >
+                  ← Previous Chapter
+                </button>
+                <button 
+                  onClick={() => changeChapter('next')} 
+                  className="hover:text-blue-900 font-bold transition-colors cursor-pointer"
+                >
+                  Next Chapter →
+                </button>
               </div>
             </div>
           </div>

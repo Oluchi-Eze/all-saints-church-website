@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Landmark, ShieldCheck } from 'lucide-react'
+import { Heart, Landmark, ShieldCheck, creditCard } from 'lucide-react'
 
 export default function GivePage() {
   const [amount, setAmount] = useState<string>('50')
@@ -19,7 +19,7 @@ export default function GivePage() {
           transition={{ duration: 0.8 }}
         >
           <span className="text-blue-300 font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Generosity</span>
-          <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase italic">Give.</h1>
+          <h1 className="text-6xl md:text-8xl font-black text-white tracking-tighter uppercase italic">Donate.</h1>
           <h2 className="text-xl md:text-2xl text-blue-100 font-light mt-4 tracking-wide">
             Invest in the heart of Lelystad.
           </h2>
@@ -73,7 +73,7 @@ export default function GivePage() {
             <div className="space-y-4 mb-8">
                <input type="text" placeholder="Full Name" className="w-full pl-10 pr-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 focus:bg-white rounded-2xl outline-none transition-all font-bold text-lg text-black" />
                <input type="email" placeholder="Email Address" className="w-full pl-10 pr-6 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 focus:bg-white rounded-2xl outline-none transition-all font-bold text-lg text-black" />
-               <select className="w-full pl-6 pr-10 py-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 focus:bg-white rounded-2xl outline-none transition-all font-bold text-lg text-gray-500 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E')] bg-[length:0.7em_auto] bg-[right_1.5rem_center] bg-no-repeat">
+               <select className="w-full px-6 py-4 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-blue-900/10 transition text-gray-500">
                   <option>General Fund</option>
                   <option>Building Project</option>
                   <option>Welfare / Outreach</option>
