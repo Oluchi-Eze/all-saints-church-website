@@ -51,22 +51,12 @@ export default function ContactPage() {
   return (
     <main className="bg-white min-h-screen overflow-hidden text-slate-900">
 
-      {/* CINEMATIC HERO */}
-      <section className="relative h-[65vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+      {/* SOLID BLUE HERO */}
+      <section className="relative h-[65vh] min-h-[450px] flex items-center justify-center overflow-hidden bg-[#123B75]">
 
-        <div className="absolute inset-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-          >
-            <source src="/Hero%20page%20video.mp4" type="video/mp4" />
-          </video>
-
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-950/65 via-blue-950/55 to-blue-950/85" />
-        </div>
+        {/* Decorative background circles */}
+        <div className="absolute -top-32 -right-20 w-96 h-96 border border-white/10 rounded-full" />
+        <div className="absolute -bottom-40 -left-20 w-[450px] h-[450px] border border-white/10 rounded-full" />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
