@@ -23,8 +23,8 @@ const ALL_BOOKS_IN_ORDER = [...OLD_TESTAMENT, ...NEW_TESTAMENT]
 
 const ALL_VERSIONS = [
   { id: 'ESV', name: 'English Standard Version (ESV)', source: 'bolls', bollsId: 6 },
-  { id: 'NASB', name: 'New American Standard Bible (NASB)', source: 'bolls', bollsId: 5 },
   { id: 'NKJV', name: 'New King James Version (NKJV)', source: 'bolls', bollsId: 70 },
+  { id: 'NASB', name: 'New American Standard Bible (NASB)', source: 'bolls', bollsId: 5 },
   { id: 'NLT', name: 'New Living Translation (NLT)', source: 'bolls', bollsId: 68 },
   { id: 'AMP', name: 'Amplified Bible (AMP)', source: 'bolls', bollsId: 67 },
   { id: 'MSG', name: 'The Message (MSG)', source: 'bolls', bollsId: 10 },
