@@ -87,8 +87,9 @@ export default function Footer() {
       {/* Bottom Bar */}
       <div className="max-w-7xl mx-auto px-6 mt-8 flex flex-col md:flex-row justify-between items-center text-[10px] text-blue-300/40 uppercase tracking-[0.2em]">
         <p>© {currentYear} All Saints' Church Lelystad</p>
-        <p>Powerd by </p>
-        <Link href="https://www.honouredhands.com" className="hover:text-white">HonouredHands</Link>
+        <p>Powerd by 
+          <Link href="https://www.honouredhands.com" className="hover:text-white"> HonouredHands</Link>
+        </p>
         <div className="flex gap-6 mt-4 md:mt-0">
           <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
           <Link href="/admin" className="hover:text-white">Admin Portal</Link>
