@@ -32,11 +32,8 @@ export default function Home() {
              transition={{ duration: 1, ease: "easeOut" }}
           >
             <h1 className="text-6xl sm:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
-              WELCOME HOME
+              Alll Saint's Church Lelystad
             </h1>
-            <h2 className="text-2xl md:text-4xl text-white/90 mb-10 font-light tracking-tight italic">
-              All Saints' Church, Lelystad
-            </h2>
             
             <div className="flex flex-col md:flex-row gap-5 justify-center items-center">
               <Link href="/join" className="group bg-white text-blue-900 px-10 py-4 rounded-full font-bold text-lg hover:bg-blue-50 transition-all shadow-2xl flex items-center gap-3">
