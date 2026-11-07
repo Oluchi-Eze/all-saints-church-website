@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Mail, MapPin, Phone, Globe, BookOpen } from 'lucide-react' // Added BookOpen for the Bible link icon
 
 export default function Footer() {
@@ -89,6 +90,14 @@ export default function Footer() {
         <p>© {currentYear} All Saints' Church Lelystad</p>
         <p>Powerd by 
           <Link href="https://www.honouredhands.com" className="hover:text-white"> HonouredHands</Link>
+        <Image
+                src="/Honoured.png"
+                alt="NACE Netherlands Emblem"
+                width={200}
+                height={80}
+                className="h-10 w-auto object-contain"
+                priority
+              />
         </p>
         <div className="flex gap-6 mt-4 md:mt-0">
           <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
