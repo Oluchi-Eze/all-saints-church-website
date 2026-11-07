@@ -199,15 +199,6 @@ export default function UltimateBibleGateway() {
 
   return (
     <main className="min-h-screen bg-gray-50 pt-28 pb-12 text-gray-900 selection:bg-blue-100">
-      <div className="bg-blue-950 border-b border-blue-900 text-white py-3.5 px-6 shadow-md">
-        <div className="max-w-7xl mx-auto flex justify-between items-center text-xs font-bold tracking-widest uppercase">
-          <div className="flex items-center gap-2">
-            <BookOpen size={14} className="text-blue-400" />
-            <span>All Saints' Church — Scripture</span>
-          </div>
-          <Link href="/" className="hover:text-blue-300 transition-colors">← Back to Main Website</Link>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 mt-8">
         <div className="bg-gradient-to-r from-blue-900 to-blue-950 p-6 rounded-3xl shadow-xl mb-6 text-white border border-blue-800">
