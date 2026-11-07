@@ -65,10 +65,6 @@ export default function Navbar() {
             Sermons
             {pathname === '/sermons' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
           </Link>
-          <Link href="/give" className="hover:text-blue-300 transition relative py-1">
-            Donate
-            {pathname === '/give' && <span className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />}
-          </Link>
           <Link 
             href="/join" 
             className="bg-white text-blue-900 px-6 py-2 rounded-full hover:bg-blue-100 transition shadow-xl font-bold normal-case tracking-normal"

@@ -44,7 +44,6 @@ export default function Footer() {
             <li><Link href="/story" className="hover:text-white transition">Our Story</Link></li>
             <li><Link href="/sermons" className="hover:text-white transition">Sermons</Link></li>
             <li><Link href="/join" className="hover:text-white transition">Connect</Link></li>
-            <li><Link href="/give" className="hover:text-white transition">Donate</Link></li>
           </ul>
         </div>
 

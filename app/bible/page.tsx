@@ -1,3 +1,4 @@
+// app/bible/page.tsx
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { BookOpen, Search, ChevronLeft, ChevronRight, ListFilter, HelpCircle, Globe, Hash } from 'lucide-react'
@@ -44,22 +45,6 @@ const ALL_VERSIONS = [
   { id: 'VULG', name: 'Latin Vulgate (St. Jerome)', source: 'bolls', bollsId: 58 },
   { id: 'LXX', name: 'Septuagint (LXX) - Greek OT', source: 'bolls', bollsId: 61 }
 ]
-
-const BOLLS_SHORT_CODES: { [key: string]: string } = {
-  "Genesis": "Gen", "Exodus": "Exo", "Leviticus": "Lev", "Numbers": "Num", "Deuteronomy": "Deu",
-  "Joshua": "Jos", "Judges": "Jdg", "Ruth": "Rut", "1 Samuel": "1Sa", "2 Samuel": "2Sa",
-  "1 Kings": "1Ki", "2 Kings": "2Ki", "1 Chronicles": "1Ch", "2 Chronicles": "2Ch", "Ezra": "Ezr",
-  "Nehemiah": "Neh", "Esther": "Est", "Job": "Job", "Psalms": "Psa", "Proverbs": "Pro",
-  "Ecclesiastes": "Ecc", "Song of Solomon": "Sng", "Isaiah": "Isa", "Jeremiah": "Jer", "Lamentations": "Lam",
-  "Ezekiel": "Ezk", "Daniel": "Dan", "Hosea": "Hos", "Joel": "Jol", "Amos": "Amo",
-  "Obadiah": "Oba", "Jonah": "Jon", "Micah": "Mic", "Nahum": "Nam", "Habakkuk": "Hab",
-  "Zephaniah": "Zep", "Haggai": "Hag", "Zechariah": "Zec", "Malachi": "Mal", "Matthew": "Mat",
-  "Mark": "Mrk", "Luke": "Luk", "John": "Jhn", "Acts": "Act", "Romans": "Rom",
-  "1 Corinthians": "1Co", "2 Corinthians": "2Co", "Galatians": "Gal", "Ephesians": "Eph", "Philippians": "Php",
-  "Colossians": "Col", "1 Thessalonians": "1Th", "2 Thessalonians": "2Th", "1 Timothy": "1Ti", "2 Timothy": "2Ti",
-  "Titus": "Tit", "Philemon": "Phm", "Hebrews": "Heb", "James": "Jas", "1 John": "1Jn",
-  "2 John": "2Jn", "3 John": "3Jn", "Jude": "Jud", "Revelation": "Rev"
-}
 
 export default function UltimateBibleGateway() {
   const [book, setBook] = useState('John')
@@ -121,64 +106,57 @@ export default function UltimateBibleGateway() {
     setLoading(true)
     setError('')
     try {
-      let targetUrl = ''
-      
+      let fetchedVerses: { verse: number; text: string }[] = []
+      const bookIndexId = ALL_BOOKS_IN_ORDER.findIndex(b => b.toLowerCase() === targetBook.toLowerCase()) + 1
+
       if (currentVer.source === 'bolls') {
-        const shortCode = BOLLS_SHORT_CODES[targetBook] || targetBook.substring(0, 3)
-        const useNumericEndpoint = ['VULG', 'LXX', 'CUV', 'NBG', 'LUT'].includes(currentVer.id)
+        // Fetch directly from Bolls Life API client-side
+        const targetUrl = `https://bolls.life/get-chapter/${currentVer.id}/${bookIndexId}/${targetChapter}/`
+        const res = await fetch(targetUrl)
+        if (!res.ok) throw new Error('Bolls Life connection dropped.')
         
-        if (useNumericEndpoint) {
-          const bookIndexId = ALL_BOOKS_IN_ORDER.findIndex(b => b.toLowerCase() === targetBook.toLowerCase()) + 1
-          targetUrl = `https://bolls.life/get-chapter/${currentVer.bollsId}/${bookIndexId}/${targetChapter}/`
-        } else {
-          targetUrl = `https://bolls.life/get-text/${currentVer.id}/${shortCode}/${targetChapter}/`
+        const data = await res.json()
+        if (Array.isArray(data)) {
+          fetchedVerses = data.map((v: any) => ({ 
+            verse: v.verse, 
+            text: v.text ? v.text.replace(/<\/?[^>]+(>|$)/g, "").trim() : '' 
+          }))
         }
       } else {
-        targetUrl = `https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=${currentVer.id.toLowerCase()}`
-      }
-
-      const res = await fetch(`/api/bible?url=${encodeURIComponent(targetUrl)}`)
-      if (!res.ok) throw new Error('Proxy communication connection dropped.')
-      
-      const data = await res.json()
-
-      if (!Array.isArray(data) && !data.verses) {
-        throw new Error('Malformed JSON schema block payload response.')
-      }
-
-      const fetchedVerses = Array.isArray(data)
-        ? data.map((v: any) => ({ verse: v.verse, text: v.text }))
-        : data.verses?.map((v: any) => ({ verse: v.verse, text: v.text })) || []
-
-      if (fetchedVerses.length === 0 && currentVer.source === 'bolls') {
-        const bookIndexId = ALL_BOOKS_IN_ORDER.findIndex(b => b.toLowerCase() === targetBook.toLowerCase()) + 1
-        const retryUrl = `https://bolls.life/get-chapter/${currentVer.bollsId}/${bookIndexId}/${targetChapter}/`
-        const retryRes = await fetch(`/api/bible?url=${encodeURIComponent(retryUrl)}`)
-        const retryData = await retryRes.json()
-        const parsedRetryVerses = Array.isArray(retryData) ? retryData : []
+        // Fetch directly from bible-api.com client-side
+        const targetUrl = `https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=${currentVer.id.toLowerCase()}`
+        const res = await fetch(targetUrl)
+        if (!res.ok) throw new Error('Bible API connection dropped.')
         
-        if (parsedRetryVerses.length > 0) {
-          setVerses(parsedRetryVerses.map((v: any) => ({ verse: v.verse, text: v.text })))
-          setTotalVersesInChapter(parsedRetryVerses.length)
-          setLoading(false)
-          return
+        const data = await res.json()
+        if (data.verses) {
+          fetchedVerses = data.verses.map((v: any) => ({ 
+            verse: v.verse, 
+            text: v.text ? v.text.trim() : '' 
+          }))
         }
+      }
+
+      if (fetchedVerses.length === 0) {
+        throw new Error('No scripture text payload returned.')
       }
 
       setVerses(fetchedVerses)
       setTotalVersesInChapter(fetchedVerses.length)
     } catch (err) {
+      console.error(err)
       try {
-        const fallbackUrl = `https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=kjv`
-        const fallbackRes = await fetch(`/api/bible?url=${encodeURIComponent(fallbackUrl)}`)
+        // Fallback directly to World English Bible if primary translation fails
+        const fallbackUrl = `https://bible-api.com/${encodeURIComponent(targetBook)}+${targetChapter}?translation=web`
+        const fallbackRes = await fetch(fallbackUrl)
         const fallbackData = await fallbackRes.json()
-        const fallbackVerses = fallbackData.verses?.map((v: any) => ({ verse: v.verse, text: v.text })) || []
+        const fallbackVerses = fallbackData.verses?.map((v: any) => ({ verse: v.verse, text: v.text.trim() })) || []
         
         setVerses(fallbackVerses)
         setTotalVersesInChapter(fallbackVerses.length)
         setError('')
       } catch {
-        setError('Could not securely align structure payload maps. Review internal local server tracking nodes.')
+        setError('Could not retrieve translation data. Please check your network connection.')
       }
     } finally {
       setLoading(false)
@@ -336,14 +314,26 @@ export default function UltimateBibleGateway() {
                 </div>
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => changeChapter('prev')}
-                    disabled={chapter <= 1 || loading}
+                    onClick={() => {
+                      if (isSingleChapterBook(book)) {
+                        setVerseSelection(prev => prev === 'all' ? '1' : String(Math.max(1, Number(prev) - 1)))
+                      } else {
+                        changeChapter('prev')
+                      }
+                    }}
+                    disabled={(!isSingleChapterBook(book) && chapter <= 1) || loading}
                     className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-600 disabled:opacity-40 transition-colors cursor-pointer"
                   >
                     <ChevronLeft size={20} />
                   </button>
                   <button 
-                    onClick={() => changeChapter('next')}
+                    onClick={() => {
+                      if (isSingleChapterBook(book)) {
+                        setVerseSelection(prev => prev === 'all' ? '2' : String(Math.min(totalVersesInChapter, Number(prev) + 1)))
+                      } else {
+                        changeChapter('next')
+                      }
+                    }}
                     disabled={loading}
                     className="p-2 border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-600 transition-colors cursor-pointer"
                   >
@@ -366,7 +356,7 @@ export default function UltimateBibleGateway() {
                       <sup className="text-xs font-bold font-sans text-blue-700 inline-block mr-1.5 select-none font-mono">
                         {v.verse}
                       </sup>
-                      {v.text?.replace(/<\/?[^>]+(>|$)/g, "").trim()}{" "}
+                      {v.text}{" "}
                     </span>
                   ))}
                   {displayedVerses.length === 0 && !error && (
@@ -386,17 +376,29 @@ export default function UltimateBibleGateway() {
               <span className="flex items-center gap-1.5"><HelpCircle size={14}/> Compare phrasing layouts instantly by switching translations.</span>
               <div className="flex gap-4">
                 <button 
-                  onClick={() => changeChapter('prev')} 
-                  disabled={chapter <= 1} 
+                  onClick={() => {
+                    if (isSingleChapterBook(book)) {
+                      setVerseSelection(prev => prev === 'all' ? '1' : String(Math.max(1, Number(prev) - 1)))
+                    } else {
+                      changeChapter('prev')
+                    }
+                  }} 
+                  disabled={(!isSingleChapterBook(book) && chapter <= 1)} 
                   className="hover:text-blue-900 font-bold disabled:opacity-30 transition-colors cursor-pointer"
                 >
-                  ← Previous Chapter
+                  &larr; Previous
                 </button>
                 <button 
-                  onClick={() => changeChapter('next')} 
+                  onClick={() => {
+                    if (isSingleChapterBook(book)) {
+                      setVerseSelection(prev => prev === 'all' ? '2' : String(Math.min(totalVersesInChapter, Number(prev) + 1)))
+                    } else {
+                      changeChapter('next')
+                    }
+                  }} 
                   className="hover:text-blue-900 font-bold transition-colors cursor-pointer"
                 >
-                  Next Chapter →
+                  Next &rarr;
                 </button>
               </div>
             </div>

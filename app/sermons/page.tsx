@@ -20,7 +20,7 @@ export default async function SermonsPage() {
         {sermons.map((sermon: any) => (
           <div 
             key={sermon._id} 
-            className="p-5 md:p-8 border border-gray-100 rounded-2xl shadow-sm bg-white hover:shadow-md transition-shadow border-l-4 border-l-blue-700"
+            className="p-5 md:p-8 border border rounded-2xl shadow-sm bg-white hover:shadow-md transition-shadow border-l-4 border-l-blue-700"
           >
             <h2 className="text-xl md:text-2xl font-bold text-blue-800 mb-2 leading-tight">
               {sermon.title}
