@@ -17,9 +17,9 @@ export default function Footer() {
           <p className="text-blue-200/70 text-sm leading-relaxed mb-6">
             A multicultural family dedicated to sharing the grace of Christ in Lelystad and beyond. 
             <span className="block mt-2 font-semibold italic text-white/80 text-xs">
-              Part of the Nigerian Anglican Chaplaincy Europe (Netherlands).
+              Part of the
             </span>
-            <Link href="www.nace-netherlands.org" className="text-xl font-bold tracking-tighter mb-4 block">
+            <Link href="https://www.nace-netherlands.org" className="text-xl font-bold tracking-tighter mb-4 block">
               Nigerian Anglican Chaplaincy Europe
             </Link>
             <span className="block mt-2 font-semibold italic text-white/80 text-xs">

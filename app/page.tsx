@@ -31,8 +31,8 @@ export default function Home() {
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 1, ease: "easeOut" }}
           >
-            <h1 className="text-6xl md:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
-              WELCOME HOME.
+            <h1 className="text-6xl sm:text-9xl font-black text-white mb-4 tracking-tighter leading-none">
+              WELCOME HOME
             </h1>
             <h2 className="text-2xl md:text-4xl text-white/90 mb-10 font-light tracking-tight italic">
               All Saints' Church, Lelystad
