@@ -20,11 +20,8 @@ export default function Footer() {
               Part of the
             </span>
             <Link href="https://www.nace-netherlands.org" className="text-xl font-bold tracking-tighter mb-4 block">
-              Nigerian Anglican Chaplaincy Europe
+              Nigerian Anglican Chaplaincy Europe (Netherlands).
             </Link>
-            <span className="block mt-2 font-semibold italic text-white/80 text-xs">
-              (Netherlands).
-            </span>
           </p>
           <div className="flex gap-4">
             <a href="https://facebook.com" className="hover:text-blue-400 transition">
@@ -44,7 +41,7 @@ export default function Footer() {
             <li><Link href="/" className="hover:text-white transition">Home</Link></li>
             <li>
               <Link href="/bible" className="hover:text-white transition flex items-center gap-1.5 text-blue-200">
-                <BookOpen size={14} /> Bible Gateway
+                <BookOpen size={14} /> Bible
               </Link>
             </li>
             <li><Link href="/story" className="hover:text-white transition">Our Story</Link></li>
@@ -59,11 +56,11 @@ export default function Footer() {
           <ul className="space-y-4 text-sm text-blue-100/80">
             <li className="flex items-start gap-3">
               <MapPin size={18} className="text-blue-400 shrink-0" />
-              <span>Lelystad, Flevoland<br />Netherlands</span>
+              <span>Snijderstraat 129 8223 AA, Lelystad, Flevoland<br />Netherlands</span>
             </li>
             <li className="flex items-center gap-3">
               <Phone size={18} className="text-blue-400 shrink-0" />
-              <span>+31 (0) XX XXX XXXX</span>
+              <span>+31 6 8863163</span>
             </li>
             <li className="flex items-center gap-3">
               <Mail size={18} className="text-blue-400 shrink-0" />
@@ -76,13 +73,13 @@ export default function Footer() {
         <div>
           <h3 className="font-bold mb-6 text-blue-300 uppercase tracking-widest text-xs">Sunday Service</h3>
           <div className="bg-blue-900/50 p-4 rounded-xl border border-white/5">
-            <p className="text-white font-bold mb-1">10:00 AM</p>
+            <p className="text-white font-bold mb-1">11:00 AM</p>
             <p className="text-xs text-blue-200/70 italic leading-relaxed">
               Join us for a time of worship, prayer, and community.
             </p>
           </div>
           <p className="mt-4 text-[10px] text-blue-300/50 uppercase tracking-tighter">
-            RSIN: XXX-XXX-XXX | ANBI Registered
+            RSIN: 868097329| ANBI Registered
           </p>
         </div>
       </div>
