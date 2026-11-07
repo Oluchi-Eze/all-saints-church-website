@@ -19,12 +19,18 @@ export default function Footer() {
             <span className="block mt-2 font-semibold italic text-white/80 text-xs">
               Part of the Nigerian Anglican Chaplaincy Europe (Netherlands).
             </span>
+            <Link href="www.nace-netherlands.org" className="text-xl font-bold tracking-tighter mb-4 block">
+              Nigerian Anglican Chaplaincy Europe
+            </Link>
+            <span className="block mt-2 font-semibold italic text-white/80 text-xs">
+              (Netherlands).
+            </span>
           </p>
           <div className="flex gap-4">
             <a href="https://facebook.com" className="hover:text-blue-400 transition">
               <Globe size={20} />
             </a>
-            <a href="mailto:info@allsaintslelystad.nl" className="hover:text-blue-400 transition">
+            <a href="mailto:info@nace-netherlands.org" className="hover:text-blue-400 transition">
               <Mail size={20} />
             </a>
           </div>
@@ -61,7 +67,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-3">
               <Mail size={18} className="text-blue-400 shrink-0" />
-              <span>info@allsaintslelystad.nl</span>
+              <span>info@nace-netherlands.org</span>
             </li>
           </ul>
         </div>

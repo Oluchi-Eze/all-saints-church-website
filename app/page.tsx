@@ -103,7 +103,6 @@ export default function Home() {
       {/* Automated Daily Devotion Section */}
       <section className="py-24 px-6 max-w-7xl mx-auto bg-white border-t border-gray-100">
         <div className="mb-12 text-center md:text-left">
-          <span className="text-blue-700 font-bold tracking-[0.3em] uppercase text-xs mb-3 block">Daily Bread</span>
           <h2 className="text-4xl md:text-5xl font-bold text-blue-950 tracking-tighter">Start Your Day in the Word</h2>
         </div>
         
